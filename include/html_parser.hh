@@ -5,4 +5,8 @@
 #ifndef CRAWLER_PARSER_HH
 #define CRAWLER_PARSER_HH
 
+class html_parser {
+
+};
+
 #endif  // CRAWLER_PARSER_HH

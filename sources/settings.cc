@@ -3,6 +3,11 @@
 //
 
 #include <settings.hh>
+
+settings* settings::create_instance() {
+  return new settings();
+}
+
 settings::settings() {
   _desc.add_options()
       ("help,h", "Shows help message")
@@ -49,4 +54,10 @@ bool settings::set_settings(const po::variables_map &vm) {
         << "\nUsage:\n" << _desc;
     return false;
   }
+}
+std::ostream& operator<<(std::ostream& os, const std::unique_ptr<settings>& s) {
+  os << "Settings:\n\tUrl: " << s->_url << "\n\tDepth: " << s->_depth
+     << "\n\tDownloaders: " << s->_downloaders << "\n\tParsers: " << s->_parsers
+     << "\n\tOutput file: " << s->_output << '\n';
+  return os;
 }

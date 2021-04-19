@@ -10,26 +10,15 @@
 namespace po = boost::program_options;
 
 #include <mutex>
-class settings;
-
-class instance {
- public:
-  instance() = delete;
-  static settings* get_instance() {
-    std::unique_lock<std::mutex> lock(_mutex);
-    return _instance; }
- private:
-  static std::mutex _mutex;
-  static settings* _instance;
-};
-settings* instance::_instance = nullptr;
+#include <memory>
 
 class settings {
  public:
+  friend std::ostream& operator<<(std::ostream& os, const std::unique_ptr<settings>& s);
   po::variables_map parse_command_line(int argc, char** argv);
   bool set_settings(const po::variables_map& vm);
+  static settings* create_instance();
 
-  settings() = delete;
   settings(const settings&) = delete;
   settings& operator=(const settings&) = delete;
 
@@ -39,12 +28,32 @@ class settings {
   [[nodiscard]] auto parsers() const -> size_t { return _parsers; }
   [[nodiscard]] auto output() const -> const std::string& { return _output; }
  private:
+  settings();
   po::options_description _desc{"Allowed options"};
-  std::string _url;
+  std::string _url{};
   size_t _depth = 1;
   size_t _downloaders = 1;
   size_t _parsers = 1;
   std::string _output = "output.txt";
 };
+
+class instance {
+ public:
+  instance() = delete;
+  static std::unique_ptr<settings>& get_instance() {
+    std::unique_lock<std::mutex> lock(_mutex);
+    return (_instance) ? _instance : create_instance();
+  }
+ private:
+  static std::unique_ptr<settings>& create_instance() {
+    _instance.reset(settings::create_instance());
+    return _instance;
+  }
+ private:
+  static std::mutex _mutex;
+  static std::unique_ptr<settings> _instance;
+};
+
+
 
 #endif  // CRAWLER_SETTINGS_HH

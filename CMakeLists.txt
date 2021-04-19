@@ -35,9 +35,6 @@ find_package(gumbo CONFIG REQUIRED)
 hunter_add_package(Boost COMPONENTS program_options log filesystem system thread)
 find_package(Boost COMPONENTS program_options log log_setup filesystem system thread CONFIG REQUIRED)
 
-hunter_add_package(Beast)
-find_package(Beast CONFIG REQUIRED)
-
 hunter_add_package(OpenSSL)
 find_package(OpenSSL REQUIRED)
 
@@ -56,21 +53,21 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 set(LIBS Boost::boost
+        ${Boost_BEAST_LIBRARY}
         ${Boost_LOG_SETUP_LIBRARY}
         ${Boost_LOG_LIBRARY}
         ${Boost_FILESYSTEM_LIBRARY}
         ${Boost_THREAD_LIBRARY}
         ${Boost_SYSTEM_LIBRARY}
-        Beast::Beast
         Boost::program_options
         gumbo::gumbo
         OpenSSL::SSL
         OpenSSL::Crypto
         )
 
-target_link_libraries(${PROJECT_NAME} ${LIBS} gumbo::gumbo)
+target_link_libraries(${PROJECT_NAME} ${LIBS})
 
-target_link_libraries(demo ${PROJECT_NAME} ${LIBS} gumbo::gumbo)
+target_link_libraries(demo ${PROJECT_NAME} ${LIBS})
 
 if(BUILD_TESTS)
   add_executable(tests
