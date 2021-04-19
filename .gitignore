@@ -143,7 +143,7 @@ _deps
 
 ### VisualStudioCode ###
 .vscode/*
-!.vscode/settings.json
+!.vscode/instance.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
@@ -158,7 +158,7 @@ _deps
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
-## User settings
+## User instance
 xcuserdata/
 
 ## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
@@ -324,7 +324,7 @@ _TeamCity*
 
 # AxoCover is a Code Coverage Tool
 .axoCover/*
-!.axoCover/settings.json
+!.axoCover/instance.json
 
 # Coverlet is a free, cross platform Code Coverage Tool
 coverage*[.json, .xml, .info]
@@ -451,7 +451,7 @@ ServiceFabricBackup/
 # Business Intelligence projects
 *.rdl.data
 *.bim.layout
-*.bim_*.settings
+*.bim_*.instance
 *.rptproj.rsuser
 *- [Bb]ackup.rdl
 *- [Bb]ackup ([0-9]).rdl

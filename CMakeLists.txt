@@ -21,7 +21,7 @@ HunterGate(
 )
 
 # TODO: rename project and delete this comment
-project(template VERSION 0.1.0)
+project(crawler)
 string(APPEND CMAKE_CXX_FLAGS " -pedantic -Werror -Wall -Wextra")
 string(APPEND CMAKE_CXX_FLAGS " -Wno-unused-command-line-argument")
 string(APPEND CMAKE_CXX_FLAGS " -Wshadow -Wnon-virtual-dtor")
@@ -29,21 +29,48 @@ string(APPEND CMAKE_CXX_FLAGS " -Wshadow -Wnon-virtual-dtor")
 hunter_add_package(GTest)
 find_package(GTest CONFIG REQUIRED)
 
-add_library(${PROJECT_NAME} STATIC
-  # enum your files and delete this comment
-  ${CMAKE_CURRENT_SOURCE_DIR}/sources/source.cpp
-)
+hunter_add_package(gumbo)
+find_package(gumbo CONFIG REQUIRED)
 
-add_executable(demo
-  ${CMAKE_CURRENT_SOURCE_DIR}/demo/main.cpp
-)
+hunter_add_package(Boost COMPONENTS program_options log filesystem system thread)
+find_package(Boost COMPONENTS program_options log log_setup filesystem system thread CONFIG REQUIRED)
+
+hunter_add_package(Beast)
+find_package(Beast CONFIG REQUIRED)
+
+hunter_add_package(OpenSSL)
+find_package(OpenSSL REQUIRED)
+
+add_library(${PROJECT_NAME} STATIC
+        sources/html_parser
+        sources/downloader
+        sources/settings
+        sources/log_setup
+        )
+
+add_executable(demo demo/demo.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
   "$<INSTALL_INTERFACE:include>"
 )
 
-target_link_libraries(demo ${PROJECT_NAME})
+set(LIBS Boost::boost
+        ${Boost_LOG_SETUP_LIBRARY}
+        ${Boost_LOG_LIBRARY}
+        ${Boost_FILESYSTEM_LIBRARY}
+        ${Boost_THREAD_LIBRARY}
+        ${Boost_SYSTEM_LIBRARY}
+        Beast::Beast
+        Boost::program_options
+        gumbo::gumbo
+        OpenSSL::SSL
+        OpenSSL::Crypto
+        )
+
+target_link_libraries(${PROJECT_NAME} ${LIBS} gumbo::gumbo)
+
+target_link_libraries(demo ${PROJECT_NAME} ${LIBS} gumbo::gumbo)
 
 if(BUILD_TESTS)
   add_executable(tests
