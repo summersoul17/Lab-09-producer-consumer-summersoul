@@ -6,6 +6,7 @@
 #define INCLUDE_URL_HH_
 
 #include <string>
+#include <utility>
 
 struct url {
   url() = default;
@@ -14,6 +15,6 @@ struct url {
 
   std::string _url_str;
   size_t _depth{0};
-};
+}
 
 #endif  // INCLUDE_URL_HH_

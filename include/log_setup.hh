@@ -1,9 +1,10 @@
+// Copyright 2020 lamp
 //
 // Created by lamp on 16.04.2021.
 //
 
-#ifndef CRAWLER_LOG_SETUP_HH
-#define CRAWLER_LOG_SETUP_HH
+#ifndef INCLUDE_LOG_SETUP_HH_
+#define INCLUDE_LOG_SETUP_HH_
 
 // Boost log
 #include <boost/log/core.hpp>
@@ -19,4 +20,4 @@
 namespace crawler {
 void init();
 }
-#endif  // CRAWLER_LOG_SETUP_HH
+#endif  // INCLUDE_LOG_SETUP_HH_

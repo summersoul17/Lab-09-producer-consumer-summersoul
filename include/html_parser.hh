@@ -1,9 +1,10 @@
+// Copyright 2020 lamp
 //
 // Created by lamp on 17.04.2021.
 //
 
-#ifndef CRAWLER_PARSER_HH
-#define CRAWLER_PARSER_HH
+#ifndef INCLUDE_HTML_PARSER_HH_
+#define INCLUDE_HTML_PARSER_HH_
 
 #include <string>
 #include <page.hh>
@@ -16,7 +17,6 @@ class html_parser {
 
  private:
   size_t _depth;
-
 };
 
-#endif  // CRAWLER_PARSER_HH
+#endif  // INCLUDE_HTML_PARSER_HH_

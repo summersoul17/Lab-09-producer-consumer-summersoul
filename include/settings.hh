@@ -11,6 +11,7 @@ namespace po = boost::program_options;
 
 #include <mutex>
 #include <memory>
+#include <string>
 
 class settings {
  public:

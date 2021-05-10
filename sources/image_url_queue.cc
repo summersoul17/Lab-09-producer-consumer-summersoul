@@ -1,4 +1,4 @@
-//
+// Copyright 2020 lamp
 // Created by lamp on 5/10/21.
 //
 
@@ -43,25 +43,25 @@ void image_url_queue::update_filename(std::string_view filename) {
   _filename = filename;
 
   std::ofstream output(_filename);
-  if (!output.is_open()){
+  if (!output.is_open()) {
     throw std::runtime_error{"Error loading file: " + _filename};
   }
   output << "Images:\n";
   output.close();
 }
-
-bool image_url_queue::dump(){
+bool image_url_queue::dump() {
   std::scoped_lock lock(_file_mutex, _mutex);
 
-  if (_queue.empty()){ return false; }
+  if (_queue.empty()) {
+    return false;
+  }
 
   std::ofstream file(_filename, std::ios::app);
 
-
-  if (!file.is_open()){
+  if (!file.is_open()) {
     throw std::runtime_error{"Error loading file: " + _filename};
   }
-  while(!_queue.empty()){
+  while (!_queue.empty()) {
     auto item = std::move(_queue.front());
     _queue.pop();
     file << item._url_str << '\n';

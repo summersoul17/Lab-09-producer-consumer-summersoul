@@ -5,7 +5,10 @@
 
 
 
-void downloader::print_match(std::string url, std::string& protocol, std::string& host, std::string& target) {
+void downloader::print_match(std::string url,
+                             std::string& protocol,
+                             std::string& host,
+                             std::string& target) {
   std::smatch url_match_result;
   BOOST_LOG_TRIVIAL(debug) << "Checking: " << url;
   if (std::regex_match(url, url_match_result, _url_regex)) {
@@ -25,9 +28,9 @@ void downloader::load(const url& u) {
   std::string body{};
 
   try {
-    if (protocol == "http"){
+    if (protocol == "http") {
       load_http(body, std::move(host), std::move(target));
-    } else if (protocol == "https"){
+    } else if (protocol == "https") {
       load_https(body, std::move(host), std::move(target));
     }
   } catch (std::exception& e) {
@@ -38,7 +41,8 @@ void downloader::load(const url& u) {
 
   page_queue::get_instance()->push(page(u, body));
 }
-void downloader::load_http(std::string& body, std::string&& host, std::string&& target) {
+void downloader::load_http(std::string& body, std::string&& host,
+                           std::string&& target) {
   boost::asio::ip::tcp::resolver resolver(_context);
   boost::beast::tcp_stream stream(_context);
 
@@ -50,7 +54,8 @@ void downloader::load_http(std::string& body, std::string&& host, std::string&& 
   boost::beast::http::request<boost::beast::http::string_body> req{
       boost::beast::http::verb::get, target, 11};
   req.set(boost::beast::http::field::host, host);
-  req.set(boost::beast::http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+  req.set(boost::beast::http::field::user_agent,
+          BOOST_BEAST_VERSION_STRING);
 
   boost::beast::http::write(stream, req);
 
@@ -64,13 +69,15 @@ void downloader::load_http(std::string& body, std::string&& host, std::string&& 
 
   body = res.body();
 }
-void downloader::load_https(std::string& body, std::string&& host, std::string&& target) {
+void downloader::load_https(std::string& body, std::string&& host,
+                            std::string&& target) {
   _ssl_context.set_default_verify_paths();
   _ssl_context.add_verify_path("/etc/ssl/certs/");
   _ssl_context.set_verify_mode(boost::asio::ssl::verify_peer);
 
   boost::asio::ip::tcp::resolver resolver(_context);
-  boost::beast::ssl_stream<boost::beast::tcp_stream> stream(_context, _ssl_context);
+  boost::beast::ssl_stream<boost::beast::tcp_stream> stream(_context,
+                                                            _ssl_context);
 
   if (!SSL_set_tlsext_host_name(stream.native_handle(), host.data())) {
     boost::beast::error_code ec{static_cast<int>(::ERR_get_error()),
