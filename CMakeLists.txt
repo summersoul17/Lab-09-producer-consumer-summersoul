@@ -39,12 +39,12 @@ hunter_add_package(OpenSSL)
 find_package(OpenSSL REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
-        sources/page_queue
-        sources/url_queue
-        sources/html_parser
-        sources/downloader
-        sources/settings
-        sources/log_setup
+        sources/page_queue.cc
+        sources/url_queue.cc
+        sources/html_parser.cc
+        sources/downloader.cc
+        sources/settings.cc
+        sources/log_setup.cc
         sources/image_url_queue.cc)
 
 add_executable(demo demo/demo.cpp)
