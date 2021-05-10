@@ -18,16 +18,16 @@ static std::vector<std::string> image_ext{
 };
 
 void add_url(std::vector<url>& vector, const char* value, const page& page);
-bool image_url(const std::string& url){
+bool image_url(const std::string& url) {
   auto ex_first = url.find_last_of('.');
   const std::string extension = url.substr(ex_first + 1);
 
-  return std::any_of(image_ext.cbegin(), image_ext.cend(), [&](const std::string& s){
-    return extension == s;
-  });
+  return std::any_of(image_ext.cbegin(), image_ext.cend(),
+                     [&](const std::string& s) { return extension == s; });
 }
-
-void search_urls(GumboNode* node, std::vector<url>& images, std::vector<url>& pages, size_t depth, const page& p){
+void search_urls(GumboNode* node, std::vector<url>& images,
+                 std::vector<url>& pages, size_t depth,
+                 const page& p){
   if (node->type != GUMBO_NODE_ELEMENT) {
     return;
   }
@@ -62,7 +62,8 @@ void add_url(std::vector<url>& vector, const char* value, const page& page) {
     if (value[1] == '\0' || value[1] == '#'){ return; }
   }
 
-  vector.emplace_back(page.url_._url_str + value, page.url_._depth + 1);
+  vector.emplace_back(page.url_._url_str + value,
+                      page.url_._depth + 1);
 }
 
 void html_parser::parse(const page & p) {
