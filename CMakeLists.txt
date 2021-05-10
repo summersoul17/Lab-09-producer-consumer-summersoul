@@ -22,7 +22,7 @@ HunterGate(
 
 # TODO: rename project and delete this comment
 project(crawler)
-string(APPEND CMAKE_CXX_FLAGS " -pedantic -Werror -Wall -Wextra")
+string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 string(APPEND CMAKE_CXX_FLAGS " -Wno-unused-command-line-argument")
 string(APPEND CMAKE_CXX_FLAGS " -Wshadow -Wnon-virtual-dtor")
 
@@ -39,11 +39,13 @@ hunter_add_package(OpenSSL)
 find_package(OpenSSL REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
+        sources/page_queue
+        sources/url_queue
         sources/html_parser
         sources/downloader
         sources/settings
         sources/log_setup
-        )
+        sources/image_url_queue.cc)
 
 add_executable(demo demo/demo.cpp)
 

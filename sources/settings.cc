@@ -1,11 +1,12 @@
-//
+// Copyright 2020 lamp
 // Created by lamp on 17.04.2021.
 //
 
 #include <settings.hh>
 
-settings* settings::create_instance() {
-  return new settings();
+settings* settings::get_instance() {
+  static settings instance{};
+  return &instance;
 }
 
 settings::settings() {
@@ -21,9 +22,9 @@ settings::settings() {
 po::variables_map settings::parse_command_line(int argc, char **argv) {
   po::variables_map vm;
   po::parsed_options parsed = po::command_line_parser(argc, argv)
-      .options(_desc)
-      .allow_unregistered()
-      .run();
+                                  .options(_desc)
+                                  .allow_unregistered()
+                                  .run();
   po::store(parsed, vm);
   po::notify(vm);
   return vm;
@@ -31,33 +32,28 @@ po::variables_map settings::parse_command_line(int argc, char **argv) {
 
 bool settings::set_settings(const po::variables_map &vm) {
   try {
-    if (!vm.count("url")){
+    if (!vm.count("url")) {
       throw std::runtime_error{"Not found input URL"};
     }
     _url = vm["url"].as<std::string>();
-    if (vm.count("depth")){
+    if (vm.count("depth")) {
       _depth = vm["depth"].as<int>();
     }
-    if (vm.count("loaders")){
+    if (vm.count("loaders")) {
       _downloaders = vm["loaders"].as<int>();
     }
-    if (vm.count("parsers")){
+    if (vm.count("parsers")) {
       _parsers = vm["parsers"].as<int>();
     }
-    if (vm.count("output")){
+    if (vm.count("output")) {
       _output = vm["output"].as<std::string>();
     }
 
     return true;
-  } catch (const std::exception& e){
-    BOOST_LOG_TRIVIAL(fatal) << "Console parsing error: " << e.what()
-        << "\nUsage:\n" << _desc;
+  } catch (const std::exception& e) {
+    BOOST_LOG_TRIVIAL(fatal)
+        << "Console parsing error: " << e.what() << "\nUsage:\n"
+        << _desc;
     return false;
   }
-}
-std::ostream& operator<<(std::ostream& os, const std::unique_ptr<settings>& s) {
-  os << "Settings:\n\tUrl: " << s->_url << "\n\tDepth: " << s->_depth
-     << "\n\tDownloaders: " << s->_downloaders << "\n\tParsers: " << s->_parsers
-     << "\n\tOutput file: " << s->_output << '\n';
-  return os;
 }

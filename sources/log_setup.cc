@@ -5,8 +5,7 @@
 #include <log_setup.hh>
 
 void crawler::init() {
-  boost::log::core::get()->add_global_attribute(
-      "ThreadID", boost::log::attributes::current_thread_id());
+  boost::log::add_common_attributes();
 
   boost::log::add_console_log(
       std::cout, boost::log::keywords::format =

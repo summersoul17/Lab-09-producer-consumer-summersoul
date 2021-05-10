@@ -1,15 +1,17 @@
-//
+// Copyright 2020 lamp
 // Created by lamp on 17.04.2021.
 //
 
-#ifndef CRAWLER_DOWNLOADER_HH
-#define CRAWLER_DOWNLOADER_HH
+#ifndef INCLUDE_DOWNLOADER_HH_
+#define INCLUDE_DOWNLOADER_HH_
 
-#include <ThreadPool.h>
 #include <regex>
+
+#include <url_queue.hh>
+#include <page_queue.hh>
+#include <image_url_queue.hh>
 #include <settings.hh>
 #include <log_setup.hh>
-#include <root_cert.hpp>
 
 #include <iostream>
 #include <string>
@@ -24,35 +26,31 @@
 #include <boost/beast/version.hpp>
 #include <boost/beast/ssl.hpp>
 
-namespace http = beast::http;
+namespace http = boost::beast::http;
 namespace net = boost::asio;
 namespace ssl = net::ssl;
 using tcp = net::ip::tcp;
 
-struct html_page{
-  std::string url_{};
-  std::string page_content_{};
-}; // ??
+#include <ThreadPool.h>
 
 class downloader {
  public:
-  explicit downloader(unsigned pool_capacity);
+  downloader()
+      : _context{1},
+        _ssl_context(ssl::context::tlsv12_client) {}
   downloader(const downloader&) = delete;
   downloader& operator=(const downloader&) = delete;
 
-  void print_match(const std::string&); // Debug function only
-  html_page load(const std::string&);
-  html_page load_http();
-  html_page load_https();
-
+  static void print_match(std::string, std::string&, std::string&,
+                   std::string&);  // Debug function only
+  void load(const url&);
+  void load_http(std::string&, std::string&&, std::string&&);
+  void load_https(std::string&, std::string&&, std::string&&);
 
  private:
-  ThreadPool _pool;
-  std::regex _url_regex{
-      R"(^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?)",
-      std::regex::extended};
+  static std::regex _url_regex;
   net::io_context _context;
   ssl::context _ssl_context;
 };
 
-#endif  // CRAWLER_DOWNLOADER_HH
+#endif  // INCLUDE_DOWNLOADER_HH_
