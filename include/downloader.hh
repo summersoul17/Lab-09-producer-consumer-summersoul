@@ -41,13 +41,13 @@ class downloader {
   downloader(const downloader&) = delete;
   downloader& operator=(const downloader&) = delete;
 
-  static void print_match(std::string, std::string&, std::string&,
-                   std::string&);  // Debug function only
   void load(const url&);
-  void load_http(std::string&, std::string&&, std::string&&);
-  void load_https(std::string&, std::string&&, std::string&&);
 
  private:
+    void load_http(std::string&, std::string&&, std::string&&);
+    void load_https(std::string&, std::string&&, std::string&&);
+    static void print_match(std::string, std::string&, std::string&,
+                            std::string&);  // Debug function  only
   static std::regex _url_regex;
   net::io_context _context;
   ssl::context _ssl_context;
